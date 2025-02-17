@@ -19,17 +19,17 @@ jobs:
       - name: Install jq
         uses: sergeysova/jq-action@v2
 
-      - name: Install solc (0.8.13)
+      - name: Install solc (0.8.28)
         run: |
-          wget https://github.com/ethereum/solidity/releases/download/v0.8.13/solc-static-linux
+          wget https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux
           chmod +x solc-static-linux
-          sudo mv solc-static-linux /usr/local/bin/solc-0.8.13
+          sudo mv solc-static-linux /usr/local/bin/solc-0.8.28
 
       - name: Build forge
-        run: forge b --use 0.8.13
+        run: forge b --use 0.8.28
 
       - name: Build solidity
-        run: solc-0.8.13 --bin-runtime --overwrite -o solc-out --ir --optimize --optimize-runs 200 --evm-version cancun src/Counter.sol
+        run: solc-0.8.28 --bin-runtime --overwrite -o solc-out --ir --optimize --optimize-runs 200 --evm-version cancun src/Counter.sol
 
       - name: Forge size
         run: |
