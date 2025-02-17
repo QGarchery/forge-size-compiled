@@ -29,7 +29,7 @@ jobs:
         run: forge b --use 0.8.13
 
       - name: Build solidity
-        run: solc-0.8.28 --bin-runtime --overwrite -o solc-out --ir --optimize --optimize-runs 200 --evm-version cancun src/Counter.sol
+        run: solc-0.8.13 --bin-runtime --overwrite -o solc-out --ir --optimize --optimize-runs 200 --evm-version cancun src/Counter.sol
 
       - name: Forge size
         run: |
