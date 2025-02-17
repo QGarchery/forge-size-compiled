@@ -1,0 +1,44 @@
+name: Foundry
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install jq
+        uses: sergeysova/jq-action@v2
+
+      - name: Install solc (0.8.13)
+        run: |
+          wget https://github.com/ethereum/solidity/releases/download/v0.8.13/solc-static-linux
+          chmod +x solc-static-linux
+          sudo mv solc-static-linux /usr/local/bin/solc-0.8.13
+
+      - name: Build forge
+        run: forge b --use 0.8.13
+
+      - name: Build solidity
+        run: solc-0.8.28 --bin-runtime --overwrite -o solc-out --ir --optimize --optimize-runs 200 --evm-version cancun src/Counter.sol
+
+      - name: Forge size
+        run: |
+          nibbles_forge=$(jq -r .deployedBytecode.object out/Counter.sol/Counter.json | wc -c)
+          bytes_forge=$(echo "(${nibbles_forge} - 3) / 2" | bc)
+          echo "size compiled through forge" "${bytes_forge}"
+
+      - name: Solidity size
+        run: |
+          nibbles_solidity=$(wc -c solc-out/Counter.bin-runtime | cut -f1 -d' ')
+          bytes_solidity=$(echo "${nibbles_solidity} / 2" | bc)
+          echo "size compiled through solc " "${bytes_solidity}"

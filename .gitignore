@@ -1,6 +1,7 @@
 # Compiler files
 cache/
 out/
+solc-out/
 
 # Ignores development broadcast logs
 !/broadcast
